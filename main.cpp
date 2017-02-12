@@ -2,7 +2,6 @@
 #include <string>
 #include <cstddef>
 #include "DataStructure.h"
-
 #define CHECK_SIZE 23
 #define MIN_KEY_INDEX 0
 #define MEDIAN_KEY_INDEX 1
@@ -32,24 +31,24 @@ using namespace std;
 //private:
 //	unsigned key;
 //};
-//
-//
-//class MyValue : public Value
-//{
-//public:
-//	MyValue(string val) : value(val){}
-//	~MyValue(){}
-//	MyValue(MyValue const &v) { value = v.value; }
-//	MyValue* clone() const
-//	{
-//		return new MyValue(*this);
-//	}
-//	string get_value(){ return value; }
-//	void set_value(string val){ value = val; }
-//	void print() const { cout << value << "\n"; }
-//private:
-//	string value;
-//};
+
+
+class MyValue : public Value
+{
+public:
+	MyValue(string val) : value(val){}
+	~MyValue(){}
+	MyValue(MyValue const &v) { value = v.value; }
+	MyValue* clone() const
+	{
+		return new MyValue(*this);
+	}
+	string get_value(){ return value; }
+	void set_value(string val){ value = val; }
+	void print() const { cout << value << "\n"; }
+private:
+	string value;
+};
 
 
 void Print_Delete_And_Set_To_NULL(DataStructure* D)
@@ -111,29 +110,37 @@ void Print_Delete_And_Set_To_NULL(DataStructure* D)
 				}
 			}
 			res_values_array[i]->print();
-
 			delete res_values_array[i];
 			res_values_array[i] = NULL;
 		}
 	}
-//	cout << "---------------------------------" << "\n";;
-//
-//	for (unsigned i = 0; i < _length; i++)
-//	{
-//		std::cout<< i <<" = ";
-//		MyKey* tmp = dynamic_cast<MyKey*>(_A[i]->key());
-//	}
-//
-//	std::cout << "---------------------------------" << "\n";
-
-
+	cout << "---------------------------------" << "\n";;
 }
 
 int main()
 {
-	unsigned keys_array[CHECK_SIZE] = { 45,	21,	26,	86,	68,	58,	36,	14,2, 44,95,51,89,37,39,10,	82,	90,	12,	66,	56,70,31};
-//	unsigned keys_array[CHECK_SIZE] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30};
-//	string values_array[CHECK_SIZE] = { "45", "21", "26", "86", "68", "58", "36", "14", "2","a", "b", "z", "ab", "cv", "s", "d", "y", "yy", "ab", "yy", "s", "h", "31", "32", "33", "34", "35", "36", "37", "38" };
+//	/*Asaf test start*/
+//	int bubbleSortTest[] = { 45,21,	26,	86,	68,	58,	36,	14,2, 44,95,51,89,37,39,10,	82,	90,	12,	66,	56,70,31 };
+//	BubbleSort(bubbleSortTest, 0, (sizeof(bubbleSortTest) / sizeof(int))-1);
+//	//BubbleSort(bubbleSortTest, 0, 4);
+//
+//
+//
+//	int partitionTest[] = { 45,	21,	26,	86,	68,	58,	36,	14,2, 44,95,51,89,37,39,10,	82,	90,	12,	66,	56,70,31 };
+//
+//	Partition(partitionTest, 0, (sizeof(partitionTest) / sizeof(int)) - 1, 60);
+//
+//
+//	int selectionFiveRecursiveTest[] = { 45,	21,	26,	86,	68,	58,	36,	14,2, 44,95,51,89,37,39,10,	82,	90,	12,	66,	56,70,31 };
+//
+//	int res = SelectionFiveRecursive(5, selectionFiveRecursiveTest, 0, (sizeof(selectionFiveRecursiveTest) / sizeof(int)) - 1);
+//
+//	/*Asaf test end*/
+
+
+
+
+	unsigned keys_array[CHECK_SIZE] = {45,	21,	26,	86,	68,	58,	36,	14,2, 44,95,51,89,37,39,10,	82,	90,	12,	66,	56,70,31};
 	string values_array[CHECK_SIZE] = { "45", "21", "26", "86", "68", "58", "36", "14", "2","a", "b", "z", "ab", "cv", "s", "d", "y", "yy", "ab", "yy", "s", "h", "31" };
 	MyKey** my_keys_array = new MyKey*[CHECK_SIZE];
 	MyValue** my_values_array = new MyValue*[CHECK_SIZE];
@@ -145,14 +152,13 @@ int main()
 		my_values_array[i] = new MyValue(values_array[i]);
 	}
 	DataStructure* DS = new DataStructure((Key**)my_keys_array, (Value**)my_values_array, CHECK_SIZE);
-
-	Print_Delete_And_Set_To_NULL(DS);
-
-	for (i = 0; i < (CHECK_SIZE/2); i++)
-	{
-		DS->Extract_Median();
-	}
-	Print_Delete_And_Set_To_NULL(DS);
+//	Print_Delete_And_Set_To_NULL(DS);
+//
+//	for (i = 0; i < (CHECK_SIZE/2); i++)
+//	{
+//		DS->Extract_Median();
+//	}
+//	Print_Delete_And_Set_To_NULL(DS);
 //
 //	DS->Extract_Min();
 //	DS->Extract_Min();

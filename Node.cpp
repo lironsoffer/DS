@@ -47,26 +47,6 @@ unsigned* bubbleSort(Node** A,unsigned len)
 
 	return indexes;
 }
-
-unsigned naive_median(Node** A,unsigned len)
-{
-	Node** B = new Node*[len];
-	for (unsigned i=0;i<len;i++)
-	{
-		B[i]=new Node(A[i]);
-	}
-
-	unsigned* indexes = bubbleSort(B,len);
-//	Node* tmp = new Node(B[len/2]);
-
-	for (unsigned i=0;i<len;i++)
-	{
-		delete B[i];
-	}
-	delete[] B;
-	return indexes[len/2];
-}
-
 Node* Node::copy(Node* n)
 	{
 		if (_key!=NULL)

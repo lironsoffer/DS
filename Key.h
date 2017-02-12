@@ -8,6 +8,4 @@ public:
 	virtual Key* clone() const = 0;
 	virtual bool operator<(const Key &rhs) const = 0;
 };
-
-
 #endif
