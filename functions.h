@@ -8,74 +8,113 @@
 #ifndef FUNCTIONS_H_
 #define FUNCTIONS_H_
 #include "Node.h"
-inline unsigned partition(Node** A, unsigned len, unsigned idx) //NOtice: CHanged
+unsigned partition(Node** A, unsigned n, Node* idx)
 {
-	if (idx!=0)
-		swapNodes(A[idx],A[0]);
-	unsigned b(1),t(len-1);
-	while(b<=t)
+	unsigned b(0),t(n-1);
+	while(b<t)
 	{
-		while ((keyCmp(A[b],A[idx])))
-		b++;
-		while (keyCmp(A[idx],A[t]))
-			t--;
-		if (b<t)
-		{
-//			std::cout<<"swap "<<b<<" with "<<t<<std::endl;
+		 while ((keyCmp(A[b],idx)||(idx==A[b]))&&(b<t))
+				b++;
+		while ((keyCmp(idx,A[t]))&&(b<t))
+				t--;
+		if (b<t){
 			swapNodes(A[b],A[t]);
-//			b++;
-//			t--;
+			b++;
+			t--;
 		}
 	}
+	unsigned i;
+	for (i=0;i<n;i++){
+		if (A[i]==idx)break;
+	}
+	if ((i<t)&&(keyCmp(A[i],A[t]))) {swapNodes(A[i],A[t-1]);return t-1;}
+	if ((t<i)&&(keyCmp(A[t],A[i]))) {swapNodes(A[i],A[t+1]);return t+1;}
+	else{
+	swapNodes(A[i],A[t]);
 	return t;
+	}
 }
-inline unsigned quick_select(Node** v, unsigned n, unsigned k)
+/****************************Asaf******************************/
+int bigger(int a, int b)
 {
-	    if (n == 1 && k == 0) return 0;
-
-	    unsigned m = (n + 4)/5;
-	    Node **medians = new Node*[m];
-	    for (unsigned i=0; i<m; i++) {
-	        if (5*i + 4 < n) {
-	            Node **w = v + 5*i;
-	            for (int j0=0; j0<3; j0++) {
-	                int jmin = j0;
-	                for (int j=j0+1; j<5; j++) {
-	                    if (w[j]->key() < w[jmin]->key()) jmin = j;
-	                }
-	                swapNodes(w[j0], w[jmin]);
-	            }
-	            medians[i] = w[2];
-	        } else {
-	            medians[i] = v[5*i];
-	        }
-	    }
-
-	    unsigned pivot = quick_select(medians, m, m/2);
-	    delete [] medians;
-
-	    for (unsigned i=0; i<n; i++) {
-	        if (v[i] == v[pivot]) {
-	            swapNodes(v[i], v[n-1]);
-	            break;
-	        }
-	    }
-
-	    unsigned store = 0;
-	    for (unsigned i=0; i<n-1; i++) {
-	        if (v[i] < v[pivot]) {
-	            swapNodes(v[i], v[store++]);
-	        }
-	    }
-	    swapNodes(v[store], v[n-1]);
-
-	    if (store == k) {
-	        return pivot;
-	    } else if (store > k) {
-	        return quick_select(v, store, k);
-	    } else {
-	        return quick_select(v+store+1, n-store-1, k-store-1);
-	    }
+	return a > b ? a : b;
 }
+//this is the prime Recursive SelectionFive.
+//the function gets an number i which represent the index in which we want to
+//return the number of the subtable index array by ref, number right boundary
+//and number left boundary he function will return the number i of it's size
+const int ONE_INDEX=1;
+Node* SelectionFiveRecursiveHelper(int i, Node** a, int left, int right)
+{
+	Node* PivotValue;
+	int n = right - left + ONE_INDEX;
+
+	//stopping condition
+	if (n <= 5)
+	{
+		bubbleSort(a,right-left);
+		return a[left + i - ONE_INDEX];
+	}
+
+	else
+	{
+		Node* five[5];
+
+		int j = 0;
+		int five_ind;
+
+		//round up if not divide in five
+		int b_size;
+		if (n%5==0) b_size=n/5;
+		else b_size=(n/5)+1;
+		Node** B = new Node*[b_size];
+		for (int k = left; k <= right;)
+		{
+
+			for (five_ind = 0; ((five_ind < 5) && (k <= right)); five_ind++, k++)
+				five[five_ind] = a[k];
+
+			//sorted each five item using the bubble sort algorithm
+			bubbleSort(five, five_ind - ONE_INDEX);
+
+
+			//the middle variable
+			B[j] = five[five_ind / 2];
+			j++;
+		}
+		//call in recursive in order to find the number n/10 in his size in B
+		PivotValue = SelectionFiveRecursiveHelper(bigger(b_size / 2, 1), B, 0, b_size - ONE_INDEX);
+//		//place the number into his place
+		int PivotPlace = partition(a,right-left,PivotValue);
+		int SizeLeftPart = PivotPlace - left;
+		//this is the item i of it's size in the sub array
+		if (i == (SizeLeftPart + ONE_INDEX))
+			{delete[] B;return a[PivotPlace];}
+		//those 2 lines were added by vered they are not part of the code
+		delete[] B;
+		return a[0];
+//		//call in recursive from the left to PivotPlace
+//		else if (i < SizeLeftPart + ONE_INDEX)
+//			{delete[] B;return SelectionFiveRecursiveHelper(i, a, left, PivotPlace - ONE_INDEX);}
+//
+//		//(i>SizeLeftPart+1) call in recusive from the right of PivotPlace
+//		else{delete[] B;
+//			return SelectionFiveRecursiveHelper
+//			(i - (SizeLeftPart + ONE_INDEX), a, PivotPlace + ONE_INDEX, right);}
+	}
+}
+
+
+//this is the surround function of SelectionFiveRecursiveHelper that get an
+//index i, array a (getting by value in order not to change the original array),
+//number right boundary and number left boundary the function call to the prime
+//recursive function in order to do the selection five algorithm
+Node* SelectionFiveRecursive(int i, Node**  a, int left, int right)
+{
+	return SelectionFiveRecursiveHelper(i, a, left, right);
+}
+
+
+
 
 #endif /* FUNCTIONS_H_ */

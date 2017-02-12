@@ -1,93 +1,7 @@
-/*
- * DataStructure.cpp
- *
- *  Created on: Feb 5, 2017
- *      Author: liron_s
- */
 
 #include "DataStructure.h"
-
-DataStructure::DataStructure(Key** keys_array ,Value** values_array, unsigned length):
-	_length(length),_root(NULL),_left(NULL),_right(NULL),_A(new Node*[length])
-{
-	for (unsigned i=0;i<length;i++)
-	{
-		_A[i]=new Node(keys_array[i],values_array[i]);
-	}
-
-	//TODO: change to real
-	if (length>2)
-	{
-		_root=_A[length/2];
-		_left=_A[0];
-		_right=_A[length-1];
-	}
-	else if (length>1)
-		{
-			_root=_A[length/2];
-			_left=_A[0];
-		}
-	else if (length>0)
-	{
-		_root=_A[0];
-	}
-
-//	print("ORIGINAL");
-
-	//	bubbleSort(_A,_length);
-	//	print("SORTED");
-
-	unsigned median =  naive_median(_A,_length);
-	partition(_A, length,median);
-	cout << "MDEIAN="<<median<<"\n";
-	print("PARTITIONED");
-
-	_root=_A[0];
-
-//	std::cout <<"A[0] = ";
-//	dynamic_cast<MyKey*>(_A[0]->key())->print();
-//	std::cout <<"root = ";
-//	dynamic_cast<MyKey*>(_root->key())->print();
-
-
-	//Create Max Heap
-	unsigned B_len = length/2;
-	Node** B = new Node*[B_len]; //TODO: realise
-	for (unsigned i=0;i<B_len;i++)
-		B[i]=new Node(_A[i+1]);
-//	if (DEBUG)	print(B, B_len,"B ARRAY");
-	for (unsigned i=B_len/2;i>0;i--)
-		this->heapifyMaxArray(B,i,B_len);
-	this->heapifyMaxArray(B,0,B_len);
-	if (DEBUG)	print(B,B_len,"B_MAX_HEAPIFIED");
-	_left=createHeap(B, 0, B_len ,max); //equals to B[0]
-
-
-	//Create Max Heap
-	unsigned C_len = length/2;
-	Node** C = new Node*[C_len]; //TODO: realise
-	for (unsigned i=0;i<C_len;i++)
-	{
-		C[i]=new Node(_A[i+1+B_len]);
-	}
-//	print(C, C_len,"C ARRAY");
-	for (unsigned i=C_len/2;i>0;i--)
-			this->heapifyMinArray(C,i,C_len);
-		this->heapifyMinArray(C,0,C_len);
-	if (DEBUG)	print(C,C_len,"C_MIN_HEAPIFIED");
-	_right=createHeap(C, 0, C_len, min); //equals to C[0]
-
-	for (unsigned i=0;i<B_len;i++)
-		delete B[i];
-	delete[] B;
-	for (unsigned i=0;i<C_len;i++)
-		delete C[i];
-	delete[] C;
-
-}
-
-
-void DataStructure::print(string str="")
+#include "functions.h"
+void DataStructure::print(std::string str="")
 {
 	if (!DEBUG)
 		return;
@@ -101,7 +15,7 @@ void DataStructure::print(string str="")
 	std::cout << "---------------------------------" << "\n";
 }
 
-void DataStructure::print(Node** A, unsigned len, string str="")
+void DataStructure::print(Node** A, unsigned len, std::string str="")
 	{
 		if (!DEBUG)
 			return;
@@ -115,7 +29,7 @@ void DataStructure::print(Node** A, unsigned len, string str="")
 		std::cout << "---------------------------------" << "\n";
 	}
 
-void DataStructure::printHeap(string str="")
+void DataStructure::printHeap(std::string str="")
 {
 	if (!DEBUG)
 		return;
@@ -128,10 +42,52 @@ void DataStructure::printHeap(string str="")
 		dynamic_cast<MyKey*>(_A[i*2+1]->key())->print();
 
 	}
-
-	std::cout << "---------------------------------" << "\n";
 }
+DataStructure::DataStructure(Key** keys_array ,Value** values_array, unsigned length):
+		_length(length),_root(NULL),_left(NULL),_right(NULL),_A(new Node*[length]){
+				for (unsigned i=0;i<length;i++)
+				{
+					_A[i]=new Node(keys_array[i],values_array[i]);
+				}
+				//Node* Median=SelectionFiveRecursiveHelper(_length/2,_A,0,length);
+				unsigned median=partition(_A,_length,_A[0]);//TODO change from A[0] to Median
+				_root=_A[median];
+				swapNodes(_A[median],_A[0]);
+				//if (DEBUG) print(_A,_length,"A ARRAY after partition");
+					//Create Min Heap
+					unsigned B_len = length/2;
+					Node** B = new Node*[B_len]; //TODO: realise
+					for (unsigned i=0;i<B_len;i++)
+						B[i]=new Node(_A[i+1]);
+					//if (DEBUG)	print(B, B_len,"B ARRAY");
+					for (unsigned i=B_len/2;i>0;i--)
+						this->heapifyMinArray(B,i,B_len);
+					this->heapifyMinArray(B,0,B_len);
+					//if (DEBUG)	print(B,B_len,"B_Min_HEAPIFIED");
+					_left=createHeap(B, 0, B_len,max); //equals to B[0]
 
+
+					//Create Max Heap
+					unsigned C_len = length/2;
+					Node** C = new Node*[C_len]; //TODO: realise
+					for (unsigned i=0;i<C_len;i++)
+					{
+						C[i]=new Node(_A[i+1+B_len]);
+					}
+					//print(C, C_len,"C ARRAY");
+					for (unsigned i=C_len/2;i>0;i--)
+							this->heapifyMaxArray(C,i,C_len);
+						this->heapifyMaxArray(C,0,C_len);
+					//if (DEBUG)	print(C,C_len,"C_Max_HEAPIFIED");
+					_right=createHeap(C, 0, C_len,min); //equals to C[0]
+
+					for (unsigned i=0;i<B_len;i++)
+						delete B[i];
+					delete[] B;
+					for (unsigned i=0;i<C_len;i++)
+						delete C[i];
+					delete[] C;
+			}
 void DataStructure::heapifyMaxArray(Node** A, unsigned pi,unsigned len)
 {
 	unsigned left=((pi+1)*2)-1;
@@ -159,7 +115,6 @@ void DataStructure::heapifyMaxArray(Node** A, unsigned pi,unsigned len)
 		this->heapifyMaxArray(A, max,len);
 	}
 }
-
 void DataStructure::heapifyMinArray(Node** A, unsigned pi, unsigned len)
 	{
 		unsigned left=((pi+1)*2)-1;
@@ -187,7 +142,6 @@ void DataStructure::heapifyMinArray(Node** A, unsigned pi, unsigned len)
 			this->heapifyMinArray(A,min,len);
 		}
 	}
-
 Node* DataStructure::createHeap(Node** A, unsigned pi, unsigned len, heapType type)
 {
 	Node* a;
@@ -225,26 +179,37 @@ Node* DataStructure::createHeap(Node** A, unsigned pi, unsigned len, heapType ty
 	if (pi<len)	createHeap(A,pi	,len,type);
 	return a;
 }
-
-void DataStructure::Extract_Min()
-{
-
-}
-
+// for this moment ignore this function
 void DataStructure::Extract_Median()
 {
 	if((_length-1)%2==0) //Both right and left heaps have same number of elements
 		// Than new median is from left heap
 	{
+		Node* newRoot;
+//		Key* key=_left->getSpecialKey()->key()->clone();
+//		Node* special=_left->getSpecialKey();
+//		if(special==NULL)
+//		{
+//			newRoot;a
+//		}
+//		Value* val = _left->getSpecialKey()->val()->clone();
+//		Node* newRoot=new Node(key,val,NULL,_root->left(),_root->right());
 
-		Node* special=_left->getSpecialKey();
-		Node* newRoot=new Node(special->key(),special->val(),NULL,
-				_root->left(),_root->right());
-		_root=newRoot;
-	}
-	else // Than new median is from right heap
-	{
 
+//		if(_left->getSpecialKey()==_left->getSpecialKey()->pi()->right())
+//		{
+//			_left->getSpecialKey()->pi()->right(NULL);
+//		}
+//		else if(_left->getSpecialKey()==_left->getSpecialKey()->pi()->left())
+//		{
+//			_left->getSpecialKey()->pi()->left(NULL);
+//		}
+//		_left->getSpecialKey()->pi(NULL);
+//		_root=newRoot;
+
+//		delete tmp;
 	}
 }
+
+
 
