@@ -178,37 +178,7 @@ Node* DataStructure::createHeap(Node** A, unsigned pi, unsigned len, heapType ty
 	a->updateSpecialKey();
 	if (pi<len)	createHeap(A,pi	,len,type);
 	return a;
-}
-// for this moment ignore this function
-void DataStructure::Extract_Median()
-{
-	if((_length-1)%2==0) //Both right and left heaps have same number of elements
-		// Than new median is from left heap
-	{
-		Node* newRoot;
-//		Key* key=_left->getSpecialKey()->key()->clone();
-//		Node* special=_left->getSpecialKey();
-//		if(special==NULL)
-//		{
-//			newRoot;a
-//		}
-//		Value* val = _left->getSpecialKey()->val()->clone();
-//		Node* newRoot=new Node(key,val,NULL,_root->left(),_root->right());
 
-
-//		if(_left->getSpecialKey()==_left->getSpecialKey()->pi()->right())
-//		{
-//			_left->getSpecialKey()->pi()->right(NULL);
-//		}
-//		else if(_left->getSpecialKey()==_left->getSpecialKey()->pi()->left())
-//		{
-//			_left->getSpecialKey()->pi()->left(NULL);
-//		}
-//		_left->getSpecialKey()->pi(NULL);
-//		_root=newRoot;
-
-//		delete tmp;
-	}
 }
 
 

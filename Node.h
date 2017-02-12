@@ -40,9 +40,9 @@ public:
 	Node* pi() const{return _pi;}
 	Node* left() const{return _left;}
 	Node* right() const{return _right;}
-	void pi(Node* node){if (node!=NULL)	_pi=node->_pi;}
-	void left(Node* node){if (node!=NULL)	_left=node->_left;}
-	void right(Node* node){if (node!=NULL)	_right=node->_right;}
+	void pi(Node* node){_pi=node;}
+	void left(Node* node){_left=node;}
+	void right(Node* node){_right=node;}
 	virtual Node* getSpecialKey() const {return _specialKey;}
 	virtual void updateSpecialKey(){}
 	bool isLeaf() const
